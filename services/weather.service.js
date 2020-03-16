@@ -19,25 +19,6 @@ module.exports = {
         }    
     },
     actions: {
-        //test
-        test: {
-            rest: {
-                method: 'GET',
-                path: 'test'
-            },
-            async handler(ctx) {
-                /*let greeterResponse = await ctx.call('greeter.ahoy', 
-                                                        {name: ctx.params.name ? ctx.params.name : 'Jane Doe',
-                                                        age: ctx.params.age ? ctx.params.age : '-1'});*/
-                this.logger.info(ctx);
-                return {
-                    test: true,
-                    data: {
-                    }
-                }
-            }
-
-        },
         getCurrentWeather: {
             rest: {
                 method: 'GET',
@@ -118,11 +99,7 @@ module.exports = {
         }
     },
     async created() {
-        //test
-        this.settings.defaultParams.testField = 'Created';//failed
     },
     async started() {
-        //test
-        this.settings.defaultParams.testField = 'Started';//failed
     }
 }
