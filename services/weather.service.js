@@ -18,6 +18,7 @@ module.exports = {
             locationKey: '324505'
         }    
     },
+    dependencies: ['location'],
     actions: {
         getCurrentWeather: {
             rest: {
@@ -26,6 +27,11 @@ module.exports = {
             },
             async handler(ctx) {
                 let locationInfo = await ctx.call('location.getLocationInfo', ctx.params);
+                if(locationInfo.err) {
+                    locationInfo.city = this.settings.defaultParams.city;
+                    locationInfo.country = this.settings.defaultParams.country;
+                    locationInfo.locationKey = this.settings.defaultParams.locationKey;
+                };
                 let strQueryURL = this.getFullQueryUrl(locationInfo.locationKey, true);
                 let response =  await fetch(strQueryURL);
                 let fetchResult = await response.json();
@@ -35,7 +41,7 @@ module.exports = {
                     country: locationInfo.country,
                     locationKey: locationInfo.locationKey
                 };
-                
+                this.logger.info('LOGGER weather.getCurrentWeather (raw)', fetchResult);
                 return result;
             }
         },
@@ -46,6 +52,11 @@ module.exports = {
             },
             async handler(ctx){
                 let locationInfo = await ctx.call('location.getLocationInfo', ctx.params);
+                if(locationInfo.err) {
+                    locationInfo.city = this.settings.defaultParams.city;
+                    locationInfo.country = this.settings.defaultParams.country;
+                    locationInfo.locationKey = this.settings.defaultParams.locationKey;
+                };
                 let strQueryURL = this.getFullQueryUrl(locationInfo.locationKey, false);
                 let response =  await fetch(strQueryURL);
                 let fetchResult = await response.json();
@@ -55,6 +66,7 @@ module.exports = {
                     country: locationInfo.country,
                     locationKey: locationInfo.locationKey
                 };
+                this.logger.info('LOGGER weather.getFiveDaysWeather (raw)', fetchResult);
                 return result;
             }
         }
@@ -67,7 +79,7 @@ module.exports = {
                     + this.settings.apikey
                     + (isCurrentWeather ? '' : '&metric=true'); 
         },
-        getFormatedWeatherObject(res = {}) {
+        getFormatedWeatherObject(res = []) {
             let weather = {
                 temperature: res[0].Temperature[this.settings.defaultParams.units].Value,
                 weatherText: res[0].WeatherText,

@@ -54,21 +54,20 @@ module.exports = {
 				return `Welcome, ${ctx.params.name}`;
 			}
 		},
-
+		//for testing purposes
 		ahoy: {
 			rest: '/ahoy',
 			params: {
-				/*name: 'string',
-				age: 'string'*/
+				name: 'string',
+				age: 'string'
 			},
 
 			async handler(ctx) {
 				//this.logger.info('LOGGER ahoy', ctx.params);
 				let result = {
 					name: ctx.params.name ? ctx.params.name : 'John Doe',
-					age: ctx.params.age ? ctx.params.age : '0'
+					age: ctx.params.age ? Number(ctx.params.age) : 0,
 				};
-				//this.logger.info('LOGGER ahoy, result', result, ctx.params);
 				return result;
 			}
 		}

@@ -27,7 +27,7 @@ module.exports = {
                 let strQueryURL = this.getFullQueryUrl({city: city, country: country});
                 let response =  await fetch(strQueryURL);
                 let fetchResult = await response.json();
-                //return fetchResult;
+                this.logger.info('LOGGER location.getLocationInfo (raw)', fetchResult);
                 let result = this.getFormatedLocationObject(fetchResult);
                 
                 return result;
@@ -40,7 +40,8 @@ module.exports = {
             },
             async handler(ctx){
                 let result =  await ctx.call('location.getLocationInfo', ctx.params);
-                return result.locationKey;
+                this.logger.info('LOGGER location.getLocationKey result (raw)', result, result.err ? this.settings.defaultParams.locationKey : result.locationKey);
+                return result.err ? this.settings.defaultParams.locationKey : result.locationKey;
             }
         }
     },
@@ -50,20 +51,23 @@ module.exports = {
                     + this.settings.apikey + '&q='
                     + params.city + ',' + params.country; 
         },
-        getFormatedLocationObject(res = {}) {
-            let location = {
-                locationKey: res[0].Key,
-                city: res[0].EnglishName,
-                country: res[0].Country.ID,
-                countryName: res[0].Country.EnglishName,
-                region: res[0].Region.ID,
-                regionName: res[0].Region.EnglishName,
+        getFormatedLocationObject(res = []) {
+            let location = {err: true, message: 'not found'};
+            if(res.length != 0) {
+                location = {
+                    locationKey: res[0].Key,
+                    city: res[0].EnglishName,
+                    country: res[0].Country.ID,
+                    countryName: res[0].Country.EnglishName,
+                    region: res[0].Region.ID,
+                    regionName: res[0].Region.EnglishName,
+                    message: 'succeed',
+                    err: false
+                };
             };
             return location;
         }
     },
-    async created() {
-    },
-    async started() {
-    }
+    async created() {},
+    async started() {}
 }
