@@ -32,10 +32,11 @@
   },
   "jest": {
     "coverageDirectory": "../coverage",
+    "verbose": true,
     "testEnvironment": "node",
     "rootDir": "./services",
     "roots": [
-      "../test"
+      "../test/unit/services"
     ]
   }
 }

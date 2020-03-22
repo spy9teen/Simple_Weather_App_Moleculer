@@ -11,7 +11,16 @@ describe("Test 'greeter' service", () => {
 	beforeAll(() => broker.start());
 	afterAll(() => broker.stop());
 
-	describe("Test 'greeter.hello' action", () => {
+	describe("Testing 'greeter.ahoy' action", () => {
+		it("TESTING AHOY METHOD", async () => {
+			let res = await broker.call("greeter.ahoy", {name: 'someName', age: '0'});
+			res['ageType'] = typeof(res.age);
+			delete res.age;
+			expect(res).toEqual({ageType: 'number', name: 'someName'});
+		});	
+	});
+
+	/*describe("Test 'greeter.hello' action", () => {
 
 		it("should return with 'Hello Moleculer'", async () => {
 			const res = await broker.call("greeter.hello");
@@ -36,7 +45,7 @@ describe("Test 'greeter' service", () => {
 			}
 		});
 
-	});
+	});*/
 
 });
 
